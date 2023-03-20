@@ -2,7 +2,6 @@ import pandas as pd
 from PIL import Image
 import numpy as np
 import io
-import os
 
 import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
@@ -12,9 +11,9 @@ from pyspark.sql.functions import col, pandas_udf, PandasUDFType, element_at, sp
 from pyspark.sql import SparkSession
 
 # Set images path
-PATH = os.getcwd()
-PATH_Data = PATH+'/data/Test1'
-PATH_Result = PATH+'/data/Results'
+PATH = 's3://fruit-data'
+PATH_Data = PATH+'/Test'
+PATH_Result = PATH+'/Results'
 print('PATH:        '+\
       PATH+'\nPATH_Data:   '+\
       PATH_Data+'\nPATH_Result: '+PATH_Result)
