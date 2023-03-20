@@ -114,3 +114,6 @@ features_df = images.repartition(20).select(col("path"),
 
 # Saving features in Parquet format
 features_df.write.mode("overwrite").parquet(PATH_Result)
+
+df = pd.read_parquet(PATH_Result, engine='pyarrow')
+df.to_csv('preprocessed_images.csv')
