@@ -10,4 +10,4 @@ PATH = 's3://fruit-data/Results'
 for i, filename in enumerate(glob.iglob(f'{PATH}/*.parquet')):
     print(filename)
     df = pd.read_parquet(filename)
-    df.to_csv(f'batch_images_{i}.csv')
+    df.to_csv(f'{PATH}/preprocessed_images_{i}.csv')
