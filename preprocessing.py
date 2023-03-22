@@ -119,9 +119,6 @@ def perform_pca(features_df):
     :param features_df: A DataFrame containing the features extracted from the images.
     :return: A DataFrame with PCA features, retaining at least 80% of the global variation.
     """
-    # Assemble the features into a single vector column
-    assembler = VectorAssembler(inputCols=["features"], outputCol="features_vec")
-    features_vec_df = assembler.transform(features_df)
 
     # Convert the array column to a dense vector column
     to_vector = udf(lambda x: Vectors.dense(x), VectorUDT())
