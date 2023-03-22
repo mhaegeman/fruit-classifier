@@ -10,7 +10,7 @@ from tensorflow.keras import Model
 from pyspark.sql.functions import col, pandas_udf, PandasUDFType, element_at, split
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import PCA
-from pyspark.ml.linalg import Vectors
+from pyspark.ml.linalg import Vectors, SparseVector
 from pyspark.ml.feature import VectorAssembler
 import matplotlib.pyplot as plt
 
