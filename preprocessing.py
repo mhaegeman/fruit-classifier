@@ -7,10 +7,10 @@ import tensorflow as tf
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras import Model
-from pyspark.sql.functions import col, pandas_udf, PandasUDFType, element_at, split
+from pyspark.sql.functions import col, pandas_udf, PandasUDFType, element_at, split, udf
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import PCA
-from pyspark.ml.linalg import Vectors, SparseVector
+from pyspark.ml.linalg import Vectors, VectorUDT
 from pyspark.ml.feature import VectorAssembler
 import matplotlib.pyplot as plt
 
@@ -94,11 +94,11 @@ def featurize_series(model, content_series):
     output = [p.flatten() for p in preds]
     return pd.Series(output)
 
-@pandas_udf('array<SparseVector>', PandasUDFType.SCALAR_ITER)
+@pandas_udf('array<float>', PandasUDFType.SCALAR_ITER)
 def featurize_udf(content_series_iter):
     '''
     This method is a Scalar Iterator pandas UDF wrapping our featurization function.
-    The decorator specifies that this returns a Spark DataFrame column of type ArrayType(SparseVectorType).
+    The decorator specifies that this returns a Spark DataFrame column of type ArrayType(Float).
 
     :param content_series_iter: This argument is an iterator over batches of data, where each batch
                               is a pandas Series of image data.
@@ -122,6 +122,11 @@ def perform_pca(features_df):
     # Assemble the features into a single vector column
     assembler = VectorAssembler(inputCols=["features"], outputCol="features_vec")
     features_vec_df = assembler.transform(features_df)
+
+    # Convert the array column to a dense vector column
+    to_vector = udf(lambda x: Vectors.dense(x), VectorUDT())
+    features_vec_df = features_df.withColumn("features_vec", to_vector("features"))
+
 
     # Initialize a list to store explained variances
     explained_variances = []
