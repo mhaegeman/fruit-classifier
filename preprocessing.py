@@ -170,4 +170,4 @@ features_df = images.repartition(20).select(col("path"),
 pca_df = perform_pca(features_df)
 
 # Saving pca_df in Parquet format
-pca_df.write.mode("overwrite").parquet(PATH_Result)
+pca_df.write.mode("overwrite").csv(PATH_Result)
