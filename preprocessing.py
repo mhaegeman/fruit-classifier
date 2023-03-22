@@ -94,11 +94,11 @@ def featurize_series(model, content_series):
     output = [p.flatten() for p in preds]
     return pd.Series(output)
 
-@pandas_udf('array<float>', PandasUDFType.SCALAR_ITER)
+@pandas_udf('array<SparseVector>', PandasUDFType.SCALAR_ITER)
 def featurize_udf(content_series_iter):
     '''
     This method is a Scalar Iterator pandas UDF wrapping our featurization function.
-    The decorator specifies that this returns a Spark DataFrame column of type ArrayType(FloatType).
+    The decorator specifies that this returns a Spark DataFrame column of type ArrayType(SparseVectorType).
 
     :param content_series_iter: This argument is an iterator over batches of data, where each batch
                               is a pandas Series of image data.
